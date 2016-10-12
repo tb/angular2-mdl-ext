@@ -10,6 +10,7 @@ import {
     NgModule,
     ViewEncapsulation,
 } from '@angular/core';
+import { getNodeDimensions } from './get-node-dimensions';
 
 
 @Component({
@@ -76,18 +77,16 @@ export class MdlPopoverComponent implements AfterViewInit {
         const nativeEl = this.elementRef.nativeElement;
         const targetRect = (<HTMLElement>event.target).getBoundingClientRect();
         const viewHeight = window.innerHeight;
+        const height = getNodeDimensions(nativeEl, {display: 'block'}).height;
 
-        setTimeout(() => {
-            let height = nativeEl.offsetHeight;
-            if (height) {
-                const spaceAvailable = {
-                    top: targetRect.top,
-                    bottom: viewHeight - targetRect.bottom
-                };
-                this.directionUp = spaceAvailable.bottom < height;
-                this.changeDetectionRef.markForCheck();
-            }
-        });
+        if (height) {
+            const spaceAvailable = {
+                top: targetRect.top,
+                bottom: viewHeight - targetRect.bottom
+            };
+            this.directionUp = spaceAvailable.bottom < height;
+            this.changeDetectionRef.markForCheck();
+        }
     }
 }
 
